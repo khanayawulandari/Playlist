@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://kit.fontawesome.com/ca0509d048.js" crossorigin="anonymous"></script>
+</head>
+<body>
+    <div class="container">
+        <div class="music-player">
+    <nav>
+        <div class="circle">
+            <i class="fa-solid fa-angle-left"></i>
+        </div>
+        <div class="circle">
+            <i class="fa-solid fa-bars"></i>
+        </div>
+    </nav>
+    <img src="media/GaoN.jpeg" class="song-img">
+    <h1>Save Me</h1>
+    <p>Xdinary Heroes</p>
+
+    <audio id="song">
+            <source src="media/SAVE-ME.mp3"  type="audio/mp3">
+    </audio>
+    <input type="range" value="0" id="progress">
+
+    <div class="controls">
+            <div onclick="prevSong()"><i class="fa-solid fa-backward"></i></div>
+            <div onclick="playPause()"><i class="fa-solid fa-play" id="ctrlIcon"></i></div>
+            <div onclick="nextSong()"> <i class="fa-solid fa-forward"></i></div>
+    </div>
+        </div>
+    </div>
+
+    <script>
+        let progress = document.getElementById("progress");
+        let song = document.getElementById("song");
+        let ctrlIcon = document.getElementById("ctrlIcon");
+
+        let playlist =[
+            {
+                name: "Save Me",
+                artist: "Xdinary Heroes",
+                img: "media/GaoN.jpeg",
+                src: "media/SAVE-ME.mp3"
+            },
+            {
+                name: "Never Mine",
+                artist: "After Nourway",
+                img: "media/AfterN.jpeg",
+                src: "media/NeMine.mp3"
+            },
+            {
+                name: "Multo",
+                artist: "Cup of Joe",
+                img: "media/ALINN!.jpeg", 
+                src: "media/Multo.mp3"
+            }
+        ]
+        let currentTime =0;
+
+        function loadSong(){
+            song.src = playlist[currentTime].src;
+            document.querySelector(".song-img").src = playlist[currentTime].img;
+            document.querySelector("h1").innerText = playlist[currentTime].name;
+            document.querySelector("p").innerText = playlist[currentTime].artist;
+
+            song.load();
+            song.play();
+            ctrlIcon.classList.remove("fa-play");
+            ctrlIcon.classList.add("fa-pause");
+        }
+
+        function nextSong(){
+            currentTime++;
+            if(currentTime > playlist.length -1){
+                currentTime =0;
+            }
+            loadSong();
+        }
+
+        function prevSong(){
+            currentTime--;
+            if(currentTime < 0){
+                currentTime = playlist.length -1;
+            }
+            loadSong();
+        }
+
+        song.onloadedmetadata = function(){
+            progress.max = song.duration;
+            progress.value = song.currentTime;
+        }
+        function playPause(){
+            if(ctrlIcon.classList.contains("fa-pause")){
+                song.pause();
+                ctrlIcon.classList.remove("fa-pause");
+                ctrlIcon.classList.add("fa-play");
+            }
+            else{
+                song.play();
+                ctrlIcon.classList.add("fa-pause");
+                ctrlIcon.classList.remove("fa-play");
+                }
+            }
+
+        if(song.play()){
+            setInterval(()=>{
+                progress.value = song.currentTime;
+            },500);
+        }
+
+        progress.onchange = function(){
+            song.play();
+            song.currentTime = progress.value;
+            ctrlIcon.classList.add("fa-pause");
+            ctrlIcon.classList.remove("fa-play");
+        }
+
+    </script>
+
+</body>
+</html>
